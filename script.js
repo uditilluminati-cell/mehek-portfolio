@@ -254,7 +254,7 @@
 
   /* ---------- magnetic CTA ---------- */
   if (!prefersReducedMotion && !isTouch) {
-    $$('.btn, .nav__cta').forEach(btn => {
+    $$('.btn, .nav__cta, .case__live').forEach(btn => {
       btn.addEventListener('mousemove', (e) => {
         const r = btn.getBoundingClientRect();
         const cx = r.left + r.width / 2;
@@ -483,5 +483,78 @@
         reelVideo.pause();
       }
     });
+  }
+
+  /* ---------- premium motion: stagger / parallax / scrollspy ---------- */
+
+  // staggered cascade for grouped reveal blocks
+  [['.services__list', '.service'],
+   ['.process__steps', 'li'],
+   ['.about__col--stats', '.stat']].forEach(([parentSel, childSel]) => {
+    $$(parentSel).forEach(p => {
+      $$(childSel, p).forEach((c, i) => c.style.setProperty('--rd', (i * 0.09) + 's'));
+    });
+  });
+
+  // fine-grained reveal — case pillars cascade + image clip-wipe
+  const fineIO = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.classList.add('in-view');
+        fineIO.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -4% 0px' });
+
+  $$('.case__pillars').forEach(group => {
+    Array.from(group.children).forEach((child, i) => {
+      child.classList.add('reveal-item');
+      child.style.setProperty('--rd', (i * 0.08) + 's');
+      fineIO.observe(child);
+    });
+  });
+  $$('.artframe img, .portrait__photo img').forEach(img => {
+    img.classList.add('img-reveal');
+    fineIO.observe(img);
+  });
+
+  // showreel deck copy joins the reveal system
+  $$('.reel__deck').forEach(el => { el.classList.add('reveal'); io.observe(el); });
+
+  // scroll parallax — case visuals drift for depth
+  if (!prefersReducedMotion) {
+    const pEls = $$('.case__visual');
+    let pRaf = null;
+    const doParallax = () => {
+      const vh = innerHeight;
+      pEls.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -120 || r.top > vh + 120) return;
+        const off = (r.top + r.height / 2 - vh / 2) / vh;   // -0.5 .. 0.5
+        el.style.transform = `translate3d(0, ${(-off * 30).toFixed(1)}px, 0)`;
+      });
+      pRaf = null;
+    };
+    addEventListener('scroll', () => {
+      if (!pRaf) pRaf = requestAnimationFrame(doParallax);
+    }, { passive: true });
+    doParallax();
+  }
+
+  // nav scrollspy — highlight the section you're in
+  const navA = $$('.nav__links a');
+  const spySections = ['work', 'services', 'about', 'contact']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  if (navA.length && spySections.length) {
+    const spyIO = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          navA.forEach(a =>
+            a.classList.toggle('is-active', a.getAttribute('href') === '#' + en.target.id));
+        }
+      });
+    }, { rootMargin: '-32% 0px -55% 0px', threshold: 0 });
+    spySections.forEach(s => spyIO.observe(s));
   }
 })();
