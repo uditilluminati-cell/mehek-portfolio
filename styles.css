@@ -1687,6 +1687,51 @@ section h2.in-view::after { width: 3.4rem; }
 }
 .process__steps p { font-size: 13.5px; color: var(--ink-2); line-height: 1.6; }
 
+/* ============================================================
+   AI ARTWORK FRAME (case 05)
+   ============================================================ */
+.case__visual--art { display: flex; justify-content: center; align-items: center; }
+.artframe {
+  margin: 0;
+  width: 100%;
+  background: #0a0908;
+  border: 1px solid rgba(244,236,225,.14);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 30px 60px -24px rgba(0,0,0,.55);
+  transform: perspective(1600px) rotateY(3deg) rotateX(1.5deg);
+  transition: transform .8s var(--ease-out);
+}
+.case__feature-grid:hover .artframe { transform: perspective(1600px) rotateY(0deg) rotateX(0deg); }
+.artframe img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 7px;
+  filter: saturate(1.05);
+}
+.artframe figcaption {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  color: rgba(244,236,225,.55);
+  text-transform: uppercase;
+  padding: 11px 4px 3px;
+}
+.artframe figcaption .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 8px var(--accent-2);
+  flex: 0 0 auto;
+}
+@media (max-width: 600px) {
+  .artframe { transform: none !important; padding: 9px; border-radius: 14px; }
+  .artframe figcaption { font-size: 9px; }
+}
+
 @media (max-width: 900px) {
   .process__steps { grid-template-columns: 1fr 1fr; }
   .process__steps > li:nth-child(2) { border-right: 1px solid var(--line); }
