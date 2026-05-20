@@ -1732,6 +1732,129 @@ section h2.in-view::after { width: 3.4rem; }
   .artframe figcaption { font-size: 9px; }
 }
 
+/* ============================================================
+   SHOWREEL — autoplay video section
+   ============================================================ */
+.reel {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 5.5rem var(--gutter) 6rem;
+  border-top: 1px solid rgba(244,236,225,.08);
+}
+.reel__head { max-width: var(--max); margin: 0 auto 2.4rem; }
+.reel .kicker { color: rgba(244,236,225,.5); }
+.reel__glyph, .kicker__glyph {
+  color: var(--accent-2);
+  font-size: .9em;
+  margin-right: .15rem;
+}
+.reel h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin-top: .7rem;
+}
+.reel h2 em { font-family: var(--serif-i); font-style: italic; color: var(--accent-2); }
+.reel__deck {
+  font-family: var(--sans);
+  font-size: clamp(.92rem, 1.05vw, 1.05rem);
+  color: rgba(244,236,225,.62);
+  line-height: 1.65;
+  max-width: 540px;
+  margin-top: 1rem;
+}
+.reel__frame {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(244,236,225,.14);
+  box-shadow: 0 40px 80px -30px rgba(0,0,0,.8);
+  aspect-ratio: 1280 / 710;
+  opacity: 0;
+  transform: translateY(40px) scale(.985);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+}
+.reel__frame.in-view { opacity: 1; transform: none; }
+.reel__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* moving scan-line accent */
+.reel__scan {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-2), transparent);
+  opacity: .55;
+  animation: reelScan 5.5s linear infinite;
+  pointer-events: none;
+}
+@keyframes reelScan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(clamp(220px, 56vw, 620px)); }
+}
+/* unmute button */
+.reel__sound {
+  position: absolute;
+  right: 14px; bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .55rem .85rem;
+  background: rgba(10,9,8,.66);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(244,236,225,.22);
+  border-radius: 999px;
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .3s, border-color .3s, transform .3s;
+}
+.reel__sound:hover { background: rgba(10,9,8,.85); border-color: var(--accent-2); transform: translateY(-2px); }
+.reel__ico { flex: 0 0 auto; }
+.reel__ico--on { display: none; }
+.reel.is-unmuted .reel__ico--off { display: none; }
+.reel.is-unmuted .reel__ico--on { display: inline; }
+.reel.is-unmuted .reel__sound-label::after { content: "Sound on"; }
+.reel.is-unmuted .reel__sound-label { font-size: 0; }
+.reel.is-unmuted .reel__sound-label::after { font-size: 10.5px; }
+.reel__cap {
+  position: absolute;
+  left: 14px; bottom: 16px;
+  display: flex; align-items: center; gap: .5rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(244,236,225,.7);
+  text-shadow: 0 1px 8px rgba(0,0,0,.9);
+}
+.reel__cap .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 8px var(--accent-2);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@media (max-width: 600px) {
+  .reel { padding: 3.4rem var(--gutter) 3.6rem; }
+  .reel__head { margin-bottom: 1.6rem; }
+  .reel__frame { border-radius: 12px; }
+  .reel__sound { right: 9px; bottom: 9px; padding: .45rem .65rem; font-size: 9px; }
+  .reel__sound-label { display: none; }
+  .reel__cap { left: 9px; bottom: 10px; font-size: 8.5px; }
+}
+
 @media (max-width: 900px) {
   .process__steps { grid-template-columns: 1fr 1fr; }
   .process__steps > li:nth-child(2) { border-right: 1px solid var(--line); }

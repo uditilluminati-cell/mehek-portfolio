@@ -432,4 +432,56 @@
       );
     }, 4000);
   }
+
+  /* ---------- showreel: autoplay on view + sound toggle ---------- */
+  const reel      = $('#reel');
+  const reelFrame = $('#reelFrame');
+  const reelVideo = $('#reelVideo');
+  const reelSound = $('#reelSound');
+  if (reel && reelVideo && reelFrame) {
+    let userPaused = false;
+
+    // reveal + autoplay when the frame scrolls into view, pause when it leaves
+    const rIO = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          reelFrame.classList.add('in-view');
+          if (!userPaused) {
+            const p = reelVideo.play();
+            if (p && p.catch) p.catch(() => {});
+          }
+        } else {
+          reelVideo.pause();
+        }
+      });
+    }, { threshold: 0.4 });
+    rIO.observe(reelFrame);
+
+    // pause playback when the tab is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) reelVideo.pause();
+    });
+
+    // tap-to-toggle sound
+    if (reelSound) {
+      reelSound.addEventListener('click', () => {
+        reelVideo.muted = !reelVideo.muted;
+        reel.classList.toggle('is-unmuted', !reelVideo.muted);
+        const p = reelVideo.play();          // unmuting should keep it playing
+        if (p && p.catch) p.catch(() => {});
+      });
+    }
+
+    // click the video itself to pause / resume
+    reelVideo.addEventListener('click', () => {
+      if (reelVideo.paused) {
+        userPaused = false;
+        const p = reelVideo.play();
+        if (p && p.catch) p.catch(() => {});
+      } else {
+        userPaused = true;
+        reelVideo.pause();
+      }
+    });
+  }
 })();

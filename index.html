@@ -543,6 +543,29 @@
       </article>
     </section>
 
+    <!-- SHOWREEL -->
+    <section class="reel" id="reel">
+      <div class="reel__head">
+        <span class="kicker"><span class="kicker__glyph">✦</span>Showreel</span>
+        <h2>Generative AI, <em>in motion.</em></h2>
+        <p class="reel__deck">A cinematic shot generated and composed in-studio — Spider-Man over the Gateway of India, Mumbai. Text-to-video, graded and finished into a single take.</p>
+      </div>
+      <figure class="reel__frame" id="reelFrame">
+        <video id="reelVideo" class="reel__video" muted loop playsinline preload="none" poster="assets/showreel-poster.jpg">
+          <source src="assets/showreel.mp4" type="video/mp4" />
+        </video>
+        <span class="reel__scan" aria-hidden="true"></span>
+        <button class="reel__sound" id="reelSound" type="button" aria-label="Unmute video">
+          <svg class="reel__ico reel__ico--off" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          <svg class="reel__ico reel__ico--on" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor"/><path d="M16 8a5 5 0 0 1 0 8M18.5 5.5a9 9 0 0 1 0 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          <span class="reel__sound-label">Tap for sound</span>
+        </button>
+        <figcaption class="reel__cap">
+          <span class="dot"></span> AI-generated cinematic · plays automatically on view
+        </figcaption>
+      </figure>
+    </section>
+
     <!-- PROCESS -->
     <section class="process">
       <div class="process__head">
