@@ -1,16 +1,15 @@
-﻿# Mehek Duseja — Portfolio
+# Udit Punjabi — Portfolio
 
-## Deploy to Netlify
+AI Engineer & Builder. Live at **https://uditilluminati-cell.github.io/udit-portfolio/**
 
-### Option 1 — Drag and drop (easiest)
-1. Go to https://app.netlify.com/drop
-2. Drag this entire folder onto the drop zone
-3. Done in ~30 seconds — Netlify gives you a live URL
+## Deploy / update
 
-### Option 2 — Connect a GitHub repo
-1. Push this folder to a GitHub repo
-2. Netlify → New site → Import from Git → Pick the repo
-3. Auto-deploys on every push
+This repo auto-deploys via GitHub Pages on every push to `main`.
+
+To update:
+1. Edit files in this folder
+2. `git add . && git commit -m "update" && git push`
+3. Pages rebuilds in ~30–60 seconds
 
 ## Local preview
 Open `index.html` directly in a browser, OR run:
@@ -19,12 +18,12 @@ python -m http.server 5173
 ```
 then visit http://localhost:5173
 
-## Update Mehek's photo
-Replace `assets/mehek.jpg` with a new square photo (800x800 recommended).
+## Update the portrait
+Replace `assets/udit.jpg` with a new square photo (800x800 recommended).
 
 ## Files
-- `index.html`  - markup
-- `styles.css`  - design system + all animations
-- `script.js`   - cursor, magnetic preview, scramble, spotlight, etc.
-- `assets/`     - photos, screenshots, design samples
-- `netlify.toml` - deployment config
+- `index.html`   - markup
+- `styles.css`   - design system + animations + responsive
+- `script.js`    - cursor, magnetic preview, scramble, spotlight
+- `assets/`      - portrait, AI artwork, project screenshots
+- `netlify.toml` - config (if deploying to Netlify instead)
