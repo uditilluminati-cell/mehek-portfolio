@@ -19,9 +19,9 @@
   --night-2:      #181410;   /* night warm */
   --neon:         #d9b25a;   /* champagne gold (replaces lime) */
 
-  --serif:        "Italiana", "Cormorant Garamond", serif;
-  --serif-i:      "Instrument Serif", "Iowan Old Style", serif;
-  --sans:         "Outfit", -apple-system, "Helvetica Neue", system-ui, sans-serif;
+  --serif:        "Fraunces", Georgia, "Times New Roman", serif;
+  --serif-i:      "Fraunces", Georgia, serif;
+  --sans:         "Inter", -apple-system, "Helvetica Neue", system-ui, sans-serif;
   --mono:         "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
   --gutter:       clamp(1.2rem, 3.2vw, 3.6rem);
@@ -45,9 +45,9 @@ body {
   font-weight: 400;
   color: var(--ink);
   background: var(--cream);
-  font-size: 15px;
-  line-height: 1.55;
-  letter-spacing: -0.005em;
+  font-size: 17px;
+  line-height: 1.68;
+  letter-spacing: 0;
   overflow-x: hidden;
   cursor: none;
 }
@@ -2356,4 +2356,94 @@ section h2.reveal.in-view,
 
 @media (prefers-reduced-motion: reduce) {
   .reel__frame.in-view { animation: none !important; }
+}
+
+/* ============================================================
+   TYPOGRAPHY REFRESH — Fraunces + Inter · readability pass
+   ============================================================ */
+
+/* headings — Fraunces wants looser tracking + a little more leading */
+.hero__title {
+  letter-spacing: -0.012em;
+  line-height: 1.04;
+  font-weight: 400;
+}
+section h2, .reel h2, .cta h2 {
+  letter-spacing: -0.008em;
+  line-height: 1.13;
+  font-weight: 500;
+  font-size: clamp(1.95rem, 3.4vw, 3.15rem);
+}
+.case__copy h3, .case--gallery h3 {
+  letter-spacing: -0.008em;
+  line-height: 1.14;
+  font-weight: 500;
+  font-size: clamp(1.7rem, 2.7vw, 2.45rem);
+}
+.service__body h3 {
+  letter-spacing: -0.003em;
+  line-height: 1.22;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 1.5vw, 1.55rem);
+}
+.index__list a { letter-spacing: -0.008em; }
+.ww__head, .process__steps h3, .panel__briefing p b { letter-spacing: -0.005em; }
+
+/* body copy — larger, airier, stronger contrast */
+.hero__lede {
+  font-size: clamp(1.06rem, 1.2vw, 1.22rem);
+  line-height: 1.62;
+}
+.about__col--body p {
+  font-size: clamp(1.05rem, 1.1vw, 1.16rem);
+  line-height: 1.72;
+  margin-bottom: 1.2rem;
+}
+.about__lead {
+  font-size: clamp(1.35rem, 2vw, 1.95rem) !important;
+  line-height: 1.38 !important;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem !important;
+}
+.case__deck {
+  font-size: clamp(1.05rem, 1.15vw, 1.2rem);
+  line-height: 1.66;
+  max-width: 52ch;
+  margin-bottom: 1.7rem;
+}
+.service__body p { font-size: 1.06rem; line-height: 1.66; margin-bottom: 1rem; }
+.service__body ul { font-size: 14.5px; gap: .5rem 2rem; }
+.process__steps p { font-size: 15px; line-height: 1.66; }
+.reel__deck { font-size: clamp(1rem, 1.15vw, 1.18rem); line-height: 1.64; }
+.case__pillars div i, .case__outcomes li i { line-height: 1.5; }
+
+/* small mono labels — a hair larger for legibility */
+.kicker { font-size: 12px; }
+.case__sub { font-size: 11.5px; }
+
+/* body emphasis — Inter italic, not a serif drop-in (cleaner, less fussy) */
+.about__col--body p em,
+.case__deck em,
+.service__body p em,
+.hero__lede em,
+.process__steps p em,
+.reel__deck em {
+  font-family: var(--sans);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* more breathing room — declutter */
+.services__head, .work__head, .process__head,
+.index__head, .reel__head { margin-bottom: 3rem; }
+section h2 { margin-bottom: .15rem; }
+.about { gap: 3rem; }
+.case__pillars { gap: 1.1rem 2rem; }
+.hero__lede { max-width: 540px; }
+
+/* Fraunces renders a touch heavy — let optical sizing breathe */
+.hero__title, section h2, .reel h2, .cta h2,
+.case__copy h3, .index__list a, .about__lead {
+  font-optical-sizing: auto;
 }
