@@ -2216,12 +2216,13 @@ section h2.reveal.in-view,
 }
 .reveal-item.in-view { opacity: 1; transform: translateY(0); }
 
-/* image clip-wipe reveal */
+/* image reveal — fade + settle (opacity/scale never blocks IntersectionObserver) */
 .img-reveal {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 1.2s var(--ease-out);
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 1s var(--ease-out), transform 1.4s var(--ease-out);
 }
-.img-reveal.in-view { clip-path: inset(0 0 0 0); }
+.img-reveal.in-view { opacity: 1; transform: scale(1); }
 
 /* nav links — animated underline + scrollspy active state */
 .nav__links a { position: relative; }
@@ -2299,7 +2300,60 @@ section h2.reveal.in-view,
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .hero__squiggle, .kicker__num, .kicker__glyph, .portrait__photo,
-  .reel__scan { animation: none !important; }
-  .img-reveal { clip-path: none !important; }
+  .reel__scan, .services, .process { animation: none !important; }
+  .img-reveal { opacity: 1 !important; transform: none !important; }
   section h2.reveal, .reel h2.reveal, .cta h2.reveal { filter: none !important; }
+}
+
+/* ============================================================
+   AMBIENT MOTION — extra layer
+   ============================================================ */
+
+/* slow gradient drift on the tonal sections */
+.services, .process { background-size: 100% 200%; }
+.services { animation: bgDrift 24s ease-in-out infinite; }
+.process  { animation: bgDrift 28s ease-in-out infinite; }
+@keyframes bgDrift {
+  0%, 100% { background-position: 50% 0%; }
+  50%      { background-position: 50% 100%; }
+}
+
+/* case number + year slide in as the case reveals */
+.case__num, .case__year {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity .7s var(--ease-out) .15s, transform .7s var(--ease-out) .15s;
+}
+.case__num  { transform: translateX(-16px); }
+.case__year { transform: translateX(16px); }
+.case.in-view .case__num,
+.case.in-view .case__year { opacity: 1; transform: translateX(0); }
+
+/* live-link arrow nudges on hover */
+.case__live svg { transition: transform .35s var(--ease-out); }
+.case__live:hover svg { transform: translate(3px, -3px); }
+
+/* showreel frame — soft breathing glow once revealed */
+.reel__frame.in-view { animation: reelGlow 6s ease-in-out infinite 1s; }
+@keyframes reelGlow {
+  0%, 100% { box-shadow: 0 40px 80px -30px rgba(0,0,0,.8); }
+  50%      { box-shadow: 0 40px 92px -26px rgba(0,0,0,.85), 0 0 30px -6px rgba(217,178,90,.24); }
+}
+
+/* process steps lift on hover */
+.process__steps > li { transition: background .4s var(--ease-out); }
+.process__steps > li:hover { background: rgba(122,56,38,.045); }
+.process__num { display: inline-block; transition: transform .45s var(--ease-out); }
+.process__steps > li:hover .process__num { transform: translateY(-4px) scale(1.14); }
+
+/* case study headline lifts slightly on hover */
+.case__copy h3 { transition: transform .5s var(--ease-out); }
+.case:hover .case__copy h3 { transform: translateX(6px); }
+
+/* stat block lifts on hover */
+.stat { transition: transform .45s var(--ease-out); }
+.stat:hover { transform: translateY(-6px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reel__frame.in-view { animation: none !important; }
 }

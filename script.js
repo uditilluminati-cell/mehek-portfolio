@@ -19,21 +19,27 @@
       return;
     }
     let n = 0;
+    let t0 = performance.now();
+    const finish = () => {
+      intro.classList.add('is-gone');
+      document.body.classList.add('is-ready');
+    };
     const tick = () => {
       n += Math.max(1, Math.floor((100 - n) / 8));
       if (n >= 100) n = 100;
       introCount.textContent = n.toString().padStart(2, '0');
-      if (n < 100) requestAnimationFrame(tick);
-      else {
-        setTimeout(() => {
-          intro.classList.add('is-gone');
-          document.body.classList.add('is-ready');
-        }, 380);
-      }
+      // advance even if rAF is throttled — fall back on elapsed time
+      if (n < 100 && performance.now() - t0 < 1800) requestAnimationFrame(tick);
+      else { introCount.textContent = '100'; setTimeout(finish, 320); }
     };
     requestAnimationFrame(tick);
   }
   runIntro();
+  // hard failsafe — the intro overlay can never get stuck on screen
+  setTimeout(() => {
+    if (intro) intro.classList.add('is-gone');
+    document.body.classList.add('is-ready');
+  }, 2600);
 
   /* ---------- custom cursor with label ---------- */
   const cursor = $('.cursor');
@@ -440,26 +446,42 @@
   const reelSound = $('#reelSound');
   if (reel && reelVideo && reelFrame) {
     let userPaused = false;
+    let reelInView = false;
+
+    const tryPlay = () => {
+      if (userPaused || !reelInView) return;
+      reelVideo.muted = !reel.classList.contains('is-unmuted');
+      const p = reelVideo.play();
+      if (p && p.catch) p.catch(() => {});
+    };
 
     // reveal + autoplay when the frame scrolls into view, pause when it leaves
     const rIO = new IntersectionObserver((entries) => {
       entries.forEach(en => {
+        reelInView = en.isIntersecting;
         if (en.isIntersecting) {
           reelFrame.classList.add('in-view');
-          if (!userPaused) {
-            const p = reelVideo.play();
-            if (p && p.catch) p.catch(() => {});
-          }
+          tryPlay();
         } else {
           reelVideo.pause();
         }
       });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.25 });
     rIO.observe(reelFrame);
 
-    // pause playback when the tab is hidden
+    // retry autoplay on the first user gesture anywhere (covers strict autoplay blocks)
+    const gestureRetry = () => {
+      tryPlay();
+      ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach(ev =>
+        removeEventListener(ev, gestureRetry));
+    };
+    ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach(ev =>
+      addEventListener(ev, gestureRetry, { passive: true, once: false }));
+
+    // resume when the tab becomes visible again, pause when hidden
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) reelVideo.pause();
+      else tryPlay();
     });
 
     // tap-to-toggle sound
@@ -557,4 +579,28 @@
     }, { rootMargin: '-32% 0px -55% 0px', threshold: 0 });
     spySections.forEach(s => spyIO.observe(s));
   }
+
+  /* ---------- reveal failsafe — guarantees no content ever stays hidden ---------- */
+  const sweepSel = '.reveal, .reveal-item, .img-reveal, .reel__frame';
+  function revealSweep() {
+    const vh = innerHeight || document.documentElement.clientHeight;
+    const pending = $$(sweepSel).filter(el => !el.classList.contains('in-view'));
+    if (!pending.length) return true;
+    // read all rects first, then write classes — avoids layout thrash
+    const rects = pending.map(el => el.getBoundingClientRect());
+    pending.forEach((el, i) => {
+      if (rects[i].top < vh) el.classList.add('in-view');
+    });
+    return false;
+  }
+  // run directly on scroll/resize (no rAF dependency — bulletproof)
+  addEventListener('scroll', revealSweep, { passive: true });
+  addEventListener('resize', revealSweep, { passive: true });
+  addEventListener('load', revealSweep);
+  revealSweep();
+  // polling failsafe for the first ~12s while images load and layout settles
+  let sweepTicks = 0;
+  const sweepTimer = setInterval(() => {
+    if (revealSweep() || ++sweepTicks > 48) clearInterval(sweepTimer);
+  }, 250);
 })();
